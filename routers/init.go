@@ -25,7 +25,7 @@ func init() {
 		admin.POST("/getrule", controllers.GetAdminRule)
 		admin.POST("/getadminlist", controllers.GetAdminlist)
 		admin.POST("/getgrouplist", controllers.Getgrouplist)
-		admin.POST("/getruleslist", controllers.Getgrouplist)
+		admin.POST("/getruleslist", controllers.Getruleslist)
 	}
 
 	// router.POST("/admin/add", controllers.AdminController) //登录
