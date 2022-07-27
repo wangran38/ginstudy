@@ -130,18 +130,22 @@ func GetRulesList(limit int, pagesize int, search *Authrule, order string) []*Au
 	} else {
 		page = pagesize - 1
 	}
-	if limit <= 1 {
-		limit = 1
+	if limit <= 6 {
+		limit = 6
 
 	}
 
 	session := orm.Table("auth_rule")
-	// if search.Id != "" {
-	// 	session = session.And("id", search.Id)
-	// }
-	// if search.Pid != "" {
+	// stringid := strconv.FormatInt(search.Id, 10)
+	if search.Id > 0 {
+		session = session.And("id", search.Id)
+	}
+	// fmt.Println(stringid)
+	// stringpid := strconv.FormatInt(search.Id, 10)
+	// if search.Pid > 0 {
 	// 	session = session.And("pid", search.Pid)
 	// }
+	// fmt.Println(stringpid)
 
 	if search.Title != "" {
 		title := "%" + search.Title + "%"
@@ -171,7 +175,10 @@ func GetRulesList(limit int, pagesize int, search *Authrule, order string) []*Au
 func GetRulestotal(search *Authrule) int64 {
 	var num int64
 	num = 0
-	session := orm.Table("auth_rule").Where("")
+	session := orm.Table("auth_rule")
+	if search.Id > 0 {
+		session = session.And("id", search.Id)
+	}
 	if search.Title != "" {
 		name := "%" + search.Title + "%"
 		session = session.And("title LIKE ?", name)
@@ -196,6 +203,14 @@ func GetRulestotal(search *Authrule) int64 {
 	return num
 }
 
+func DeleteRules(id int64) int {
+	a := new(Authrule)
+	outnum, _ := orm.ID(id).Delete(a)
+
+	return int(outnum)
+
+}
+
 // func (menus []*Authrule)tree(pid int64) []*Authrule {
 // 	var nodes []*Authrule
 // 	if reflect.ValueOf(menus).IsValid() {
@@ -214,20 +229,7 @@ func GetRulestotal(search *Authrule) int64 {
 // 	}
 // 	return menus
 // }
-// func SelectAllRules() ([]Authrule) {
-// 	// a := new(Authrule)
-// 	var a []Authrule
-// 	// a := make([]*Authrule,0)
-// 	has, err := orm.Find(&a)
-// 	if err != nil {
-// 		return nil
-// 	}
-// 	if !has {
-// 		return nil
-// 	}
-// 	return a
 
-// }
 // //根据用户名密码查询用户
 // func SelectAllRules(Id int64) []Authrule {
 // 	// a := new(Authrule)
